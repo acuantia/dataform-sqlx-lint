@@ -95,6 +95,14 @@ Suppress with a reason, sparingly — the convention is usually the fix.
   on declarations.
 - Rule codes are stable; gaps in the numbering are historical.
 
+## Agent Skill
+
+`skills/dataform-sqlx-lint/` contains an
+[Agent Skill](https://agentskills.io/) — instructions that teach AI coding
+agents (Claude Code, Gemini CLI, Cursor, or any tool supporting the open
+skills format) to run this linter on every `.sqlx` file they create or
+modify. Install it by copying the folder into your agent's skills directory.
+
 ## Development
 
 ```bash
