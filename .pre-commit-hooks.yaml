@@ -1,0 +1,8 @@
+# Hook definition consumed by pre-commit when this repo is referenced
+# in a project's .pre-commit-config.yaml.
+- id: dataform-sqlx-lint
+  name: Dataform SQLX Convention Lint
+  description: Checks Dataform .sqlx config-block and project conventions
+  entry: dataform-sqlx-lint
+  language: python
+  files: \.sqlx$

@@ -1,0 +1,27 @@
+# Example: the house configuration this linter was extracted from.
+# Copy to <your dataform repo>/.sqlx-lint.toml and adapt.
+
+# Environment suffixes that must never be hardcoded in schema: (E003) —
+# the --schema-suffix flag appends them at run time.
+schema_suffixes = ["_prod", "_dev"]
+
+# Opt-in house-style rules:
+#   E005 — operations/assertions must not set schema: (hasOutput ops exempt)
+#   W008 — post_operations {} should follow the main SELECT (style only;
+#          Dataform accepts either placement)
+enable = ["E005", "W008"]
+
+# E010 column-doc coverage, scoped to the BI-facing output layer.
+# Remove to enforce coverage everywhere.
+coverage_paths = ["definitions/output/looker/"]
+
+# Naming/type policies per directory (E007).
+[[dir_policies]]
+path_contains = "definitions/output/looker/"
+require_prefix = "looker_"
+require_types = ["table", "incremental"]
+
+[[dir_policies]]
+path_contains = "definitions/intermediate/looker/"
+require_prefix = "vw_"
+severity = "warning"
