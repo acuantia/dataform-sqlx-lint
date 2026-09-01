@@ -8,9 +8,9 @@ Dataform repo healthy — this tool does.
 Zero dependencies (Python ≥ 3.11 standard library only). Designed for
 [pre-commit](https://pre-commit.com).
 
-> **Status: private preview.** Not yet published to PyPI; open-source release
-> pending approval. The `Private :: Do Not Upload` classifier guards against
-> accidental publication.
+```bash
+pip install dataform-sqlx-lint
+```
 
 ## Rules
 
@@ -44,7 +44,7 @@ index `${ref()}` targets for E010's star-resolution.
 
 ```yaml
 repos:
-  - repo: https://gitlab.com/acuantia/dataform-sqlx-lint
+  - repo: https://github.com/acuantia/dataform-sqlx-lint
     rev: v0.1.0
     hooks:
       - id: dataform-sqlx-lint
@@ -101,3 +101,7 @@ Suppress with a reason, sparingly — the convention is usually the fix.
 python3 -m venv .venv && .venv/bin/pip install -e . pytest
 .venv/bin/pytest        # 53 tests
 ```
+
+## License
+
+MIT — see [LICENSE](LICENSE).
