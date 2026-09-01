@@ -112,4 +112,4 @@ python3 -m venv .venv && .venv/bin/pip install -e . pytest
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSE](https://github.com/acuantia/dataform-sqlx-lint/blob/main/LICENSE).

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dataform-sqlx-lint"
-version = "0.1.0"
+version = "0.1.1"
 description = "Convention linter for Dataform .sqlx files — checks the config-block and project conventions that SQL linters cannot see"
 readme = "README.md"
 requires-python = ">=3.11"
