@@ -101,7 +101,10 @@ Suppress with a reason, sparingly — the convention is usually the fix.
 [Agent Skill](https://agentskills.io/) — instructions that teach AI coding
 agents (Claude Code, Gemini CLI, Cursor, or any tool supporting the open
 skills format) to run this linter on every `.sqlx` file they create or
-modify. Install it by copying the folder into your agent's skills directory.
+modify. Install it by copying the folder into your agent's skills directory —
+or paste one of the ready-made prompts in
+[skills/dataform-sqlx-lint/INSTALL_PROMPTS.md](https://github.com/acuantia/dataform-sqlx-lint/blob/main/skills/dataform-sqlx-lint/INSTALL_PROMPTS.md)
+and let the agent install itself.
 
 ## Development
 
