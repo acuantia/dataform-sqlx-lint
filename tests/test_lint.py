@@ -369,3 +369,74 @@ class TestE010ColumnCoverage:
         cfg = Config(disabled={"E010"})
         text = self._table('a: "A."', 'select a, b from ${ref("t")}')
         assert "E010" not in codes(lint_text(text, PATH, config=cfg))
+
+
+class TestE011HandWrittenForeignKeys:
+    FK_PATH = "definitions/output/looker/looker_orders.sqlx"
+    CFG = Config(
+        foreign_key_paths=["definitions/output/looker/"],
+        foreign_key_hint="includes/keys.js",
+    )
+
+    def _table(self, post_ops):
+        return (
+            'config {\n    type: "table",\n    schema: "looker",\n'
+            '    columns: { order_id: "Order." }\n}\n\n'
+            'select order_id from ${ref("vw_orders")}\n\n'
+            f"post_operations {{\n  ALTER TABLE ${{self()}}\n{post_ops}\n}}\n"
+        )
+
+    HAND_WRITTEN = (
+        "    ADD PRIMARY KEY (order_id) NOT ENFORCED,\n"
+        "    ADD CONSTRAINT o_to_c FOREIGN KEY (customer_id) "
+        'REFERENCES ${ref("looker_customer")}(customer_id) NOT ENFORCED;'
+    )
+    GENERATED = (
+        "    ADD PRIMARY KEY (order_id) NOT ENFORCED,\n"
+        "    -- No FK to looker_product: kept ids of deleted products.\n"
+        "    ${keys.fkAdd(self, ref)};"
+    )
+
+    def test_hand_written_fk_flagged_in_scope(self):
+        found = [
+            f
+            for f in lint_text(self._table(self.HAND_WRITTEN), self.FK_PATH, config=self.CFG)
+            if f.code == "E011"
+        ]
+        assert len(found) == 1
+        assert "includes/keys.js" in found[0].message
+        assert found[0].line == 12
+
+    def test_generated_fk_and_comments_pass(self):
+        assert "E011" not in codes(
+            lint_text(self._table(self.GENERATED), self.FK_PATH, config=self.CFG)
+        )
+
+    def test_out_of_scope_path_not_flagged(self):
+        assert "E011" not in codes(
+            lint_text(
+                self._table(self.HAND_WRITTEN),
+                "definitions/output/reports/orders.sqlx",
+                config=self.CFG,
+            )
+        )
+
+    def test_no_op_without_configured_paths(self):
+        assert "E011" not in codes(lint_text(self._table(self.HAND_WRITTEN), self.FK_PATH))
+
+    def test_default_hint_when_unconfigured(self):
+        cfg = Config(foreign_key_paths=["definitions/output/looker/"])
+        found = [
+            f
+            for f in lint_text(self._table(self.HAND_WRITTEN), self.FK_PATH, config=cfg)
+            if f.code == "E011"
+        ]
+        assert found and "foreign-key map" in found[0].message
+
+    def test_line_suppression(self):
+        text = self._table(
+            self.HAND_WRITTEN.replace(
+                "NOT ENFORCED;", "NOT ENFORCED; -- sqlx-lint: disable=E011 (legacy)"
+            )
+        )
+        assert "E011" not in codes(lint_text(text, self.FK_PATH, config=self.CFG))

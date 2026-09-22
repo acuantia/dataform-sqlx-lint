@@ -12,6 +12,7 @@ offending line or `-- sqlx-lint: disable-file=E006` anywhere in the file):
   E007  directory policy violation (configured prefix/type per path)
   W008  post_operations block appears before the main SELECT [opt-in]
   E010  columns:{} does not cover every determinable output column
+  E011  FOREIGN KEY written by hand in post_operations (configured paths) [no-op until configured]
 """
 
 from __future__ import annotations
@@ -356,6 +357,22 @@ def lint_text(text, path, config: Config | None = None, resolver=None):
                 sel_line,
                 f"columns: {{}} is missing documentation for output "
                 f"column(s): {shown}{more}",
+            )
+
+    # --- E011: hand-written foreign keys in post_operations (configured paths) ---
+    # Projects that generate FK DDL from one declared map (so the constraint and its
+    # referential test cannot drift apart) flag any ADD CONSTRAINT ... FOREIGN KEY that
+    # bypasses the map. Comments are stripped first, so a note like
+    # "-- No FK to looker_product" never trips it.
+    if cfg.foreign_key_paths and any(p in path for p in cfg.foreign_key_paths):
+        where = cfg.foreign_key_hint or "the project's foreign-key map"
+        for fm in re.finditer(r"\bFOREIGN\s+KEY\b", clean_body, re.I):
+            add(
+                "E011",
+                "error",
+                _line_of(text, body_offset + fm.start()),
+                f"foreign key written by hand in post_operations; declare it in "
+                f"{where} and let the map's helper emit the DDL",
             )
 
     # --- W008 (opt-in): post_operations placement ---

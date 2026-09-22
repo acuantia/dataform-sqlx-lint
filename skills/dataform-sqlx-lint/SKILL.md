@@ -40,6 +40,7 @@ the project's directory policies, opt-in rules, and E010 scope.
 | E007 | on* | directory naming/type policy violation | rename / fix type (*needs configured policies) |
 | W008 | opt-in | `post_operations` before SELECT | move below the query |
 | E010 | on | `columns:{}` misses determinable output columns | document every listed column |
+| E011 | on* | hand-written `FOREIGN KEY` in `post_operations` | declare the key in the map the message names (e.g. `includes/keys.js`) and call its helper (*needs `foreign_key_paths`) |
 
 E006 matters most: hardcoded paths silently break Dataform's dependency
 graph. E010 matters for metadata consumers: `columns:{}` is what Dataform
@@ -64,5 +65,5 @@ or `-- sqlx-lint: disable-file=E006` anywhere in the file.
 - Editing a legacy file and suppressing E002: touching a file is the natural
   moment to add its column documentation.
 
-Source, tests (53), and config reference:
+Source, tests (59), and config reference:
 https://github.com/acuantia/dataform-sqlx-lint

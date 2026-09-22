@@ -7,6 +7,8 @@ schema_suffixes = ["_prod", "_dev", "_staging"]
 coverage_paths = ["definitions/output/looker/"]
 enable = ["E005", "W008"]
 disable = ["E004"]
+foreign_key_paths = ["definitions/output/looker/"]
+foreign_key_hint = "includes/keys.js"
 
 [[dir_policies]]
 path_contains = "definitions/output/looker/"
@@ -27,6 +29,8 @@ def test_load_standalone_toml(tmp_path):
     assert cfg.coverage_paths == ["definitions/output/looker/"]
     assert "E005" in cfg.enabled_extra and "W008" in cfg.enabled_extra
     assert "E004" in cfg.disabled
+    assert cfg.foreign_key_paths == ["definitions/output/looker/"]
+    assert cfg.foreign_key_hint == "includes/keys.js"
     assert len(cfg.dir_policies) == 2
     assert cfg.dir_policies[0].require_prefix == "looker_"
     assert cfg.dir_policies[1].severity == "warning"

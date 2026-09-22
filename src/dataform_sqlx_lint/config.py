@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 #: Rules that run unless disabled.
-DEFAULT_ENABLED = {"E001", "E002", "E003", "E004", "E006", "E007", "E010"}
+DEFAULT_ENABLED = {"E001", "E002", "E003", "E004", "E006", "E007", "E010", "E011"}
 #: Opt-in rules (house-style checks): enable via `enable = [...]`.
 OPT_IN = {"E005", "W008"}
 
@@ -35,6 +35,10 @@ class Config:
     #: E010 applies only to files whose path contains one of these; empty = all.
     coverage_paths: list[str] = field(default_factory=list)
     dir_policies: list[DirPolicy] = field(default_factory=list)
+    #: E011 applies only to files whose path contains one of these; empty = rule is a no-op.
+    foreign_key_paths: list[str] = field(default_factory=list)
+    #: Where E011 tells the author to declare the key instead (named in the message).
+    foreign_key_hint: str | None = None
     enabled_extra: set[str] = field(default_factory=set)
     disabled: set[str] = field(default_factory=set)
 
@@ -51,6 +55,8 @@ class Config:
             and self.documented_types == other.documented_types
             and self.coverage_paths == other.coverage_paths
             and self.dir_policies == other.dir_policies
+            and self.foreign_key_paths == other.foreign_key_paths
+            and self.foreign_key_hint == other.foreign_key_hint
             and self.enabled_extra == other.enabled_extra
             and self.disabled == other.disabled
         )
@@ -61,6 +67,8 @@ _KNOWN_KEYS = {
     "documented_types",
     "coverage_paths",
     "dir_policies",
+    "foreign_key_paths",
+    "foreign_key_hint",
     "enable",
     "disable",
 }
@@ -88,6 +96,10 @@ def _from_dict(raw: dict) -> Config:
         kwargs["documented_types"] = set(raw["documented_types"])
     if "coverage_paths" in raw:
         kwargs["coverage_paths"] = list(raw["coverage_paths"])
+    if "foreign_key_paths" in raw:
+        kwargs["foreign_key_paths"] = list(raw["foreign_key_paths"])
+    if "foreign_key_hint" in raw:
+        kwargs["foreign_key_hint"] = str(raw["foreign_key_hint"])
     return Config(
         dir_policies=policies,
         enabled_extra=set(raw.get("enable", [])),

@@ -15,6 +15,12 @@ enable = ["E005", "W008"]
 # Remove to enforce coverage everywhere.
 coverage_paths = ["definitions/output/looker/"]
 
+# E011 — foreign keys on Looker output tables are declared once in includes/keys.js and
+# emitted by ${keys.fkAdd(self, ref)}; a hand-written ADD CONSTRAINT ... FOREIGN KEY would
+# drift from the orphan assertions generated from the same map.
+foreign_key_paths = ["definitions/output/looker/"]
+foreign_key_hint = "includes/keys.js"
+
 # Naming/type policies per directory (E007).
 [[dir_policies]]
 path_contains = "definitions/output/looker/"

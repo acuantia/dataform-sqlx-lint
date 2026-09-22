@@ -25,6 +25,7 @@ pip install dataform-sqlx-lint
 | E007 | on* | configurable per-directory naming/type policies (*no-op until policies are configured) |
 | W008 | opt-in | `post_operations {}` placed before the main SELECT (style preference; Dataform accepts either) |
 | E010 | on | every determinable output column appears in `columns: {}` — parses the main SELECT conservatively (unparseable expressions are skipped, never false-flagged) and follows `select *` through a single plain `${ref()}` into the upstream file |
+| E011 | on* | `FOREIGN KEY` written by hand in `post_operations` under configured paths — for projects that declare keys once in a map and generate both the DDL and the referential assertions from it (*no-op until `foreign_key_paths` is configured) |
 
 Why E010 matters: `columns: {}` is what Dataform writes to BigQuery column
 descriptions — the metadata data catalogs, BI tools, and AI/conversational
@@ -61,6 +62,8 @@ documented_types = ["table", "view", "incremental", "declaration"]  # E002
 coverage_paths = ["definitions/output/"]   # E010 scope; empty = everywhere
 enable = ["E005", "W008"]                  # switch on opt-in rules
 disable = ["E004"]                         # switch off default rules
+foreign_key_paths = ["definitions/output/"] # E011 scope; empty = rule off
+foreign_key_hint = "includes/keys.js"      # named in E011's message
 
 [[dir_policies]]                           # E007 (repeatable)
 path_contains = "definitions/output/looker/"
@@ -110,7 +113,7 @@ and let the agent install itself.
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -e . pytest
-.venv/bin/pytest        # 53 tests
+.venv/bin/pytest        # 59 tests
 ```
 
 ## License
