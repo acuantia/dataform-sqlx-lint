@@ -1,0 +1,60 @@
+# Publish to PyPI via Trusted Publishing (OIDC) — no API token stored anywhere.
+#
+# PyPI side (one-time, in the project's "Publishing" settings):
+#   Owner: acuantia   Repository: dataform-sqlx-lint
+#   Workflow name: publish.yml   Environment name: pypi
+#
+# Release: bump `version` in pyproject.toml, commit, then
+#   git tag vX.Y.Z && git push origin main --tags
+name: Publish to PyPI
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e . pytest
+      - run: python -m pytest -q
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install build
+      - run: python -m build
+      # Refuse to publish if the tag and pyproject disagree.
+      - name: Check tag matches package version
+        run: |
+          ver=$(python -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          [ "v$ver" = "${GITHUB_REF_NAME}" ] || { echo "tag ${GITHUB_REF_NAME} != v$ver"; exit 1; }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/dataform-sqlx-lint/
+    permissions:
+      id-token: write   # required for OIDC trusted publishing
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
