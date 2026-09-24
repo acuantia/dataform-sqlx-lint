@@ -39,13 +39,20 @@ cp -r /tmp/dsl/skills/dataform-sqlx-lint <your agent's skills directory>/
 pip install dataform-sqlx-lint
 ```
 
-Skills directories by agent: Claude Code uses `.claude/skills/` (project) or
-`~/.claude/skills/` (personal); other skills-compatible agents (Antigravity,
-Gemini CLI, Cursor) document their own location — consult your agent's skills
-documentation.
+Copy the `dataform-sqlx-lint/` folder itself, so that `SKILL.md` ends up at
+`<skills directory>/dataform-sqlx-lint/SKILL.md`. Skills directories by agent:
+
+| Agent | Project | Personal |
+|---|---|---|
+| Claude Code | `.claude/skills/` | `~/.claude/skills/` |
+| Antigravity | `.agent/skills/` | `~/.gemini/antigravity/skills/` |
+| Codex | `.agents/skills/` | `~/.agents/skills/` (older versions: `~/.codex/skills/`) |
+
+Project paths are relative to the repository root. For any other agent, see
+its skills documentation.
 
 ## Verify
 
 Ask your agent: *"Lint definitions/output/my_table.sqlx for Dataform
 conventions"* — it should invoke `dataform-sqlx-lint` and report findings by
-rule code (E001–E010).
+rule code (E001–E011).
