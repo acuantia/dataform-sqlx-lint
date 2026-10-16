@@ -11,9 +11,11 @@ schema_suffixes = ["_prod", "_dev"]
 #          Dataform accepts either placement)
 enable = ["E005", "W008"]
 
-# E010 column-doc coverage, scoped to the BI-facing output layer.
-# Remove to enforce coverage everywhere.
-coverage_paths = ["definitions/output/looker/"]
+# E010 column-doc coverage, scoped to the output layer: the Looker tables and the
+# reports views read by Google Sheets and ad-hoc consumers. Only columns the resolver
+# can determine statically are checked; a `*` through a JS-generated column hides the
+# whole star. Remove to enforce coverage everywhere.
+coverage_paths = ["definitions/output/looker/", "definitions/output/reports/"]
 
 # E011 — foreign keys on Looker output tables are declared once in includes/keys.js and
 # emitted by ${keys.fkAdd(self, ref)}; a hand-written ADD CONSTRAINT ... FOREIGN KEY would
