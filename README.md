@@ -100,14 +100,44 @@ Suppress with a reason, sparingly — the convention is usually the fix.
 
 ## Agent Skill
 
-`skills/dataform-sqlx-lint/` contains an
-[Agent Skill](https://agentskills.io/) — instructions that teach AI coding
-agents (Claude Code, Gemini CLI, Cursor, or any tool supporting the open
-skills format) to run this linter on every `.sqlx` file they create or
-modify. Install it by copying the folder into your agent's skills directory —
-or paste one of the ready-made prompts in
-[skills/dataform-sqlx-lint/INSTALL_PROMPTS.md](https://github.com/acuantia/dataform-sqlx-lint/blob/main/skills/dataform-sqlx-lint/INSTALL_PROMPTS.md)
-and let the agent install itself.
+This repo ships an [Agent Skill](https://agentskills.io/): instructions that
+teach AI coding agents (Claude Code, Antigravity, Codex, or any tool that
+supports the open skills format) to run this linter on every `.sqlx` file
+they create or modify.
+
+The skill is the folder `skills/dataform-sqlx-lint/` in this repo. Copy that
+one folder, which holds `SKILL.md`, into your agent's skills directory. Don't
+copy the whole repo or the parent `skills/` folder. The file should end up at
+`<skills directory>/dataform-sqlx-lint/SKILL.md`.
+
+Where the skills directory is:
+
+| Agent | This project only (commit it to share with your team) | Every project on your machine |
+|---|---|---|
+| Claude Code | `.claude/skills/` | `~/.claude/skills/` |
+| Antigravity | `.agent/skills/` | `~/.gemini/antigravity/skills/` |
+| Codex | `.agents/skills/` | `~/.agents/skills/` (older Codex versions used `~/.codex/skills/`) |
+
+Project paths are relative to the repository root. If your agent isn't
+listed, see its documentation on skills.
+
+For example, to install it for Claude Code in the current project:
+
+```bash
+git clone --depth 1 https://github.com/acuantia/dataform-sqlx-lint /tmp/dsl
+mkdir -p .claude/skills
+cp -r /tmp/dsl/skills/dataform-sqlx-lint .claude/skills/
+pip install dataform-sqlx-lint   # the skill runs this CLI, so install it too
+```
+
+Restart the agent or start a new session so it finds the skill. To check that
+it works, ask the agent to *"lint definitions/my_table.sqlx for Dataform
+conventions"*. It should run `dataform-sqlx-lint` and report findings by rule
+code.
+
+You can also let the agent install the skill itself. Paste one of the prompts
+in
+[skills/dataform-sqlx-lint/INSTALL_PROMPTS.md](https://github.com/acuantia/dataform-sqlx-lint/blob/main/skills/dataform-sqlx-lint/INSTALL_PROMPTS.md).
 
 ## Development
 
