@@ -1,0 +1,18 @@
+config {
+  type: "table",
+  schema: "reporting",
+  description: "Daily order count and revenue, excluding cancelled orders.",
+  columns: {
+    order_date: "Calendar date of the order (UTC)",
+    order_count: "Number of non-cancelled orders",
+    revenue: "Sum of order_total in USD"
+  }
+}
+
+select
+  date(created_at) as order_date,
+  count(*) as order_count,
+  sum(order_total) as revenue
+from ${ref("orders")}
+where status != "cancelled"
+group by 1

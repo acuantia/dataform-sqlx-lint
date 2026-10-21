@@ -1,0 +1,8 @@
+schema_suffixes = ["_prod", "_dev"]
+coverage_paths = ["definitions/output/"]
+
+[[dir_policies]]
+path_contains = "definitions/output/reporting/"
+require_prefix = "rpt_"
+require_types = ["table", "incremental", "view"]
+severity = "error"

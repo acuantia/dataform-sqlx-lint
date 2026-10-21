@@ -1,0 +1,15 @@
+config {
+  type: "declaration",
+  database: "demo-shop",
+  schema: "raw_shop",
+  name: "order_lines",
+  description: "One row per product line on an order.",
+  columns: {
+    order_id: "Order the line belongs to",
+    line_number: "Line position on the order",
+    sku: "Product SKU",
+    quantity: "Units ordered",
+    unit_price: "Unit list price in USD",
+    discount_amount: "Discount applied to the line in USD"
+  }
+}

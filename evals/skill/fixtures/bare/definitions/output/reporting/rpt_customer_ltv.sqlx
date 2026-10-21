@@ -1,0 +1,21 @@
+config {
+  type: "table",
+  schema: "reporting_prod",
+  description: "Lifetime value per customer.",
+  columns: {
+    customer_id: "Customer primary key",
+    region: "Sales region",
+    lifetime_revenue: "Sum of non-cancelled order totals in USD"
+  }
+}
+
+select
+  c.customer_id,
+  c.region,
+  sum(o.order_total) as lifetime_revenue,
+  count(o.order_id) as lifetime_orders
+from ${ref("customers")} c
+left join ${ref("orders")} o
+  on o.customer_id = c.customer_id
+  and o.status != "cancelled"
+group by 1, 2

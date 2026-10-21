@@ -1,0 +1,82 @@
+[
+  {
+    "query": "add a new incremental table definitions/output/marts/fct_sessions.sqlx that rolls up the events source by session_id. we partition on session_date. follow the conventions the rest of the repo uses",
+    "should_trigger": true
+  },
+  {
+    "query": "pre-commit keeps failing on my sqlx file with E010 columns: {} is missing documentation for output column(s): \"utm_source\" - what does it actually want me to do",
+    "should_trigger": true
+  },
+  {
+    "query": "can you review definitions/output/reporting/rpt_customer_ltv.sqlx before I open the PR? mostly want to know the config block is right",
+    "should_trigger": true
+  },
+  {
+    "query": "im refactoring our dataform repo to stop using hardcoded `acme-dw.raw.orders` style table paths. can you switch everything in definitions/staging/ over to ${ref()}",
+    "should_trigger": true
+  },
+  {
+    "query": "I just edited 6 sqlx files in definitions/output/finance/ to add a currency_code column to each. check them over before I commit pls",
+    "should_trigger": true
+  },
+  {
+    "query": "why does my table land in looker_prod_prod in bigquery? the sqlx config says schema: \"looker_prod\" and the prod release config runs with --schema-suffix prod",
+    "should_trigger": true
+  },
+  {
+    "query": "set up linting for our Dataform project so the sqlx config blocks get checked on every commit and in our GitHub Actions CI",
+    "should_trigger": true
+  },
+  {
+    "query": "rename definitions/staging/stg_orders.sqlx to stg_shop_orders.sqlx and update every file that refs it",
+    "should_trigger": true
+  },
+  {
+    "query": "half the column descriptions in BigQuery are blank for the tables our Dataform project builds. can you fix the sqlx files under definitions/output/looker/ so everything is documented",
+    "should_trigger": true
+  },
+  {
+    "query": "convert definitions/output/reporting/vw_open_orders.sqlx from a view to a table and add a post_operations block that grants SELECT to the analysts group",
+    "should_trigger": true
+  },
+  {
+    "query": "sqlfluff is complaining about capitalisation (CP01) in the bigquery queries under queries/adhoc/*.sql - can you fix the keyword casing in all of them",
+    "should_trigger": false
+  },
+  {
+    "query": "write me a BigQuery query for weekly revenue by region from acme-dw.raw_shop.orders joined to customers. I just want to paste it into the console, not add it to the repo",
+    "should_trigger": false
+  },
+  {
+    "query": "dbt run fails with 'Compilation Error: Model depends on a node named stg_orders which was not found' in models/marts/fct_orders.sql - whats wrong",
+    "should_trigger": false
+  },
+  {
+    "query": "what's the actual difference between ${ref()} and ${resolve()} in Dataform, and when would I use resolve?",
+    "should_trigger": false
+  },
+  {
+    "query": "our Dataform workflow invocation failed overnight with 'Access Denied: Table acme-dw:raw_shop.orders: User does not have permission to query table'. how do I fix the service account",
+    "should_trigger": false
+  },
+  {
+    "query": "add ruff and black pre-commit hooks for the python scripts in scripts/ in this repo",
+    "should_trigger": false
+  },
+  {
+    "query": "write a Dataform JavaScript include in includes/dates.js with a helper that returns a fiscal-week SQL expression from a date column",
+    "should_trigger": false
+  },
+  {
+    "query": "the dataform assertion assert_orders_unique failed in prod with 12 duplicate order_ids. help me find which rows are duplicated in bigquery",
+    "should_trigger": false
+  },
+  {
+    "query": "set up a release configuration and a daily workflow schedule for our Dataform repository in GCP, compiling from main",
+    "should_trigger": false
+  },
+  {
+    "query": "translate this Snowflake SQL to BigQuery GoogleSQL: SELECT DATEADD(day, -7, CURRENT_DATE()), IFF(status = 'X', 1, 0) FROM orders QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY ts DESC) = 1",
+    "should_trigger": false
+  }
+]

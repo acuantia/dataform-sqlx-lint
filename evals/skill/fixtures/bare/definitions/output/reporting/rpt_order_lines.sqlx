@@ -1,0 +1,19 @@
+config {
+  type: "table",
+  schema: "reporting",
+  description: "Order lines with extended price, for the finance team.",
+  columns: {
+    order_id: "Order the line belongs to",
+    sku: "Product SKU",
+    quantity: "Units ordered"
+  }
+}
+
+select
+  order_id,
+  line_number,
+  sku,
+  quantity,
+  unit_price,
+  quantity * unit_price as extended_price
+from `demo-shop.raw_shop.order_lines`

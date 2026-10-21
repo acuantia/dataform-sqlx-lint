@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: sqlx-lint
+        name: Dataform SQLX Convention Lint
+        entry: .venv/bin/dataform-sqlx-lint
+        language: system
+        files: \.sqlx$

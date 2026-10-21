@@ -1,0 +1,13 @@
+config {
+  type: "declaration",
+  database: "demo-shop",
+  schema: "raw_shop",
+  name: "customers",
+  description: "One row per customer.",
+  columns: {
+    customer_id: "Customer primary key",
+    email: "Customer email address",
+    region: "Sales region: north, south, east, west",
+    created_at: "Account creation timestamp (UTC)"
+  }
+}

@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+# Stand-in for `claude` during skill-creator trigger evals: put this directory
+# first on PATH. It runs the real claude without user settings (so your
+# installed plugins and their skills don't compete with the skill under test)
+# and without MCP servers. --safe-mode would also hide the eval's temporary
+# command file, and --bare needs an API key, so neither works here.
+setopt errexit nounset pipefail
+path=(${path:#${0:A:h}})
+exec claude --setting-sources project,local --strict-mcp-config "$@"

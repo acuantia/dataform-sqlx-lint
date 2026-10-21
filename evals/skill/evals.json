@@ -1,0 +1,103 @@
+{
+  "skill_name": "dataform-sqlx-lint",
+  "evals": [
+    {
+      "id": 1,
+      "name": "new-weekly-report",
+      "fixture": "hooked",
+      "prompt": "I need a new weekly orders report in our Dataform project: order count and revenue per week per customer region (region is on the customers source, cancelled orders shouldn't count). Put it under definitions/output/reporting/ and keep it consistent with the rest of the repo.",
+      "expected_output": "A new rpt_-prefixed table in definitions/output/reporting/ built from ${ref()} to orders and customers, schema 'reporting', every output column documented, linter run and clean.",
+      "files": [],
+      "expectations": [
+        "A new .sqlx file exists under definitions/output/reporting/ whose filename starts with rpt_",
+        "The new file reads its sources only through ${ref()} (no backtick-quoted project.dataset.table paths)",
+        "The new file's schema is the base name 'reporting', with no _prod/_dev suffix",
+        "Every output column of the new file is documented in columns: {} (dataform-sqlx-lint reports no E010 for it)",
+        "The agent ran dataform-sqlx-lint on the file it created",
+        "dataform-sqlx-lint exits 0 on every changed file in the final state",
+        "No sqlx-lint suppression comments were added"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "add-column-to-legacy-file",
+      "fixture": "hooked",
+      "prompt": "Finance wants discount_amount added to the order lines report, definitions/output/reporting/rpt_order_lines.sqlx. It's already in the raw order_lines table. Can you add it?",
+      "expected_output": "discount_amount added to the SELECT and documented; touching the legacy file also fixes its conventions (hardcoded path -> ${ref('order_lines')}, missing column docs), linter clean, no suppressions.",
+      "files": [],
+      "expectations": [
+        "discount_amount is selected in rpt_order_lines.sqlx",
+        "discount_amount is documented in the columns: {} block",
+        "The hardcoded `demo-shop.raw_shop.order_lines` path was replaced by ${ref(\"order_lines\")} (or equivalent ref)",
+        "The previously undocumented columns (line_number, unit_price, extended_price) are now documented",
+        "The agent ran dataform-sqlx-lint on rpt_order_lines.sqlx",
+        "dataform-sqlx-lint exits 0 on every changed file in the final state",
+        "No sqlx-lint suppression comments were added"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "fix-precommit-failure",
+      "fixture": "hooked",
+      "prompt": "my commit just got blocked by pre-commit:\n\nDataform SQLX Convention Lint............................................Failed\n- hook id: sqlx-lint\n- exit code: 1\n\ndefinitions/output/reporting/rpt_customer_ltv.sqlx:3: E003 [error] schema: \"reporting_prod\" hardcodes an environment suffix; use the base name (\"reporting\") and let --schema-suffix append it\ndefinitions/output/reporting/rpt_customer_ltv.sqlx:12: E010 [error] columns: {} is missing documentation for output column(s): \"lifetime_orders\"\nsqlx-lint: 2 error(s), 0 warning(s)\n\ncan you fix whatever it's complaining about so I can commit?",
+      "expected_output": "schema changed to 'reporting', lifetime_orders documented with a real description, linter re-run and clean, no suppression.",
+      "files": [],
+      "expectations": [
+        "rpt_customer_ltv.sqlx sets schema to 'reporting' (suffix removed, not replaced by another suffix)",
+        "lifetime_orders is documented in columns: {} with a meaningful description (not empty or a placeholder)",
+        "The fix does not use a sqlx-lint suppression comment",
+        "The agent re-ran dataform-sqlx-lint after the fix to confirm it passes",
+        "dataform-sqlx-lint exits 0 on every changed file in the final state"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "new-weekly-report-bare",
+      "fixture": "bare",
+      "prompt": "I need a new weekly orders report in our Dataform project: order count and revenue per week per customer region (region is on the customers source, cancelled orders shouldn't count). Put it under definitions/output/reporting/ and keep it consistent with the rest of the repo.",
+      "expected_output": "A new rpt_-prefixed table in definitions/output/reporting/ built from ${ref()} to orders and customers, schema 'reporting', every output column documented, linter run and clean.",
+      "files": [],
+      "expectations": [
+        "A new .sqlx file exists under definitions/output/reporting/ whose filename starts with rpt_",
+        "The new file reads its sources only through ${ref()} (no backtick-quoted project.dataset.table paths)",
+        "The new file's schema is the base name 'reporting', with no _prod/_dev suffix",
+        "Every output column of the new file is documented in columns: {} (dataform-sqlx-lint reports no E010 for it)",
+        "The agent ran dataform-sqlx-lint on the file it created",
+        "dataform-sqlx-lint exits 0 on every changed file in the final state",
+        "No sqlx-lint suppression comments were added"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "add-column-to-legacy-file-bare",
+      "fixture": "bare",
+      "prompt": "Finance wants discount_amount added to the order lines report, definitions/output/reporting/rpt_order_lines.sqlx. It's already in the raw order_lines table. Can you add it?",
+      "expected_output": "discount_amount added to the SELECT and documented; touching the legacy file also fixes its conventions (hardcoded path -> ${ref('order_lines')}, missing column docs), linter clean, no suppressions.",
+      "files": [],
+      "expectations": [
+        "discount_amount is selected in rpt_order_lines.sqlx",
+        "discount_amount is documented in the columns: {} block",
+        "The hardcoded `demo-shop.raw_shop.order_lines` path was replaced by ${ref(\"order_lines\")} (or equivalent ref)",
+        "The previously undocumented columns (line_number, unit_price, extended_price) are now documented",
+        "The agent ran dataform-sqlx-lint on rpt_order_lines.sqlx",
+        "dataform-sqlx-lint exits 0 on every changed file in the final state",
+        "No sqlx-lint suppression comments were added"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "review-before-commit-bare",
+      "fixture": "bare",
+      "prompt": "I just finished definitions/output/reporting/rpt_customer_ltv.sqlx. Can you check it over and fix anything that's off before I commit it?",
+      "expected_output": "Linter run finds E003 (reporting_prod) and E010 (lifetime_orders undocumented); both fixed without suppression; lint clean.",
+      "files": [],
+      "expectations": [
+        "rpt_customer_ltv.sqlx sets schema to 'reporting' (suffix removed, not replaced by another suffix)",
+        "lifetime_orders is documented in columns: {} with a meaningful description (not empty or a placeholder)",
+        "The fix does not use a sqlx-lint suppression comment",
+        "The agent ran dataform-sqlx-lint on rpt_customer_ltv.sqlx",
+        "dataform-sqlx-lint exits 0 on every changed file in the final state"
+      ]
+    }
+  ]
+}

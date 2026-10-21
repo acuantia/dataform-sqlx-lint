@@ -146,6 +146,9 @@ python3 -m venv .venv && .venv/bin/pip install -e . pytest
 .venv/bin/pytest        # 59 tests
 ```
 
+Evals for the Agent Skill, and how to re-run them, are in
+[evals/skill/](evals/skill/README.md).
+
 ## License
 
 MIT — see [LICENSE](https://github.com/acuantia/dataform-sqlx-lint/blob/main/LICENSE).

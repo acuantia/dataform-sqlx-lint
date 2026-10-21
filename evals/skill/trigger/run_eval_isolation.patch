@@ -1,0 +1,23 @@
+--- a/scripts/run_eval.py
++++ b/scripts/run_eval.py
+@@ -50,6 +50,12 @@
+     """
+     unique_id = uuid.uuid4().hex[:8]
+     clean_name = f"{skill_name}-skill-{unique_id}"
++    # Local patch: give each query its own copy of the project so parallel
++    # workers don't see each other's command files (which breaks detection).
++    import shutil, tempfile
++    isolated = Path(tempfile.mkdtemp(prefix="trig-", dir=os.environ.get("TRIGGER_TMP")))
++    shutil.copytree(project_root, isolated / "repo", ignore=shutil.ignore_patterns(".git"))
++    project_root = str(isolated / "repo")
+     project_commands_dir = Path(project_root) / ".claude" / "commands"
+     command_file = project_commands_dir / f"{clean_name}.md"
+ 
+@@ -179,6 +185,7 @@
+     finally:
+         if command_file.exists():
+             command_file.unlink()
++        shutil.rmtree(isolated, ignore_errors=True)
+ 
+ 
+ def run_eval(

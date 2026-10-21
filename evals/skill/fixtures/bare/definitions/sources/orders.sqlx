@@ -1,0 +1,14 @@
+config {
+  type: "declaration",
+  database: "demo-shop",
+  schema: "raw_shop",
+  name: "orders",
+  description: "One row per order, loaded hourly from the storefront.",
+  columns: {
+    order_id: "Order primary key",
+    customer_id: "Customer who placed the order",
+    created_at: "Order timestamp (UTC)",
+    order_total: "Order total in USD, after discounts",
+    status: "Order status: placed, shipped, cancelled"
+  }
+}
