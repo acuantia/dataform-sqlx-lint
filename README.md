@@ -46,7 +46,7 @@ index `${ref()}` targets for E010's star-resolution.
 ```yaml
 repos:
   - repo: https://github.com/acuantia/dataform-sqlx-lint
-    rev: v0.1.0
+    rev: v0.2.0
     hooks:
       - id: dataform-sqlx-lint
 ```
