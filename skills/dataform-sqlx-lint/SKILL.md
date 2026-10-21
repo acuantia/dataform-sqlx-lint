@@ -1,6 +1,6 @@
 ---
 name: dataform-sqlx-lint
-description: Use when creating or modifying Dataform .sqlx files, before committing them, or when a "dataform-sqlx-lint" pre-commit hook fails - checks config-block and project conventions (columns documentation, ref() usage, schema suffixes, directory naming policies) that SQL linters and dataform compile cannot see
+description: Use when creating or modifying Dataform .sqlx files, before committing them, when a "dataform-sqlx-lint" pre-commit hook fails, or when debugging a config symptom such as a doubled schema suffix (looker_prod_prod) or a table missing from the dependency graph - checks config-block and project conventions (columns documentation, ref() usage, schema suffixes, directory naming policies) that SQL linters and dataform compile cannot see
 license: MIT
 compatibility: Requires the dataform-sqlx-lint CLI (pip install dataform-sqlx-lint; Python 3.11+)
 ---
