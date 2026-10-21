@@ -137,7 +137,7 @@ code.
 
 You can also let the agent install the skill itself. Paste one of the prompts
 in
-[skills/dataform-sqlx-lint/INSTALL_PROMPTS.md](https://github.com/acuantia/dataform-sqlx-lint/blob/main/skills/dataform-sqlx-lint/INSTALL_PROMPTS.md).
+[skills/INSTALL_PROMPTS.md](https://github.com/acuantia/dataform-sqlx-lint/blob/main/skills/INSTALL_PROMPTS.md).
 
 ## Development
 

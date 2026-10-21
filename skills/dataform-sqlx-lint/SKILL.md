@@ -1,6 +1,8 @@
 ---
 name: dataform-sqlx-lint
 description: Use when creating or modifying Dataform .sqlx files, before committing them, or when a "dataform-sqlx-lint" pre-commit hook fails - checks config-block and project conventions (columns documentation, ref() usage, schema suffixes, directory naming policies) that SQL linters and dataform compile cannot see
+license: MIT
+compatibility: Requires the dataform-sqlx-lint CLI (pip install dataform-sqlx-lint; Python 3.11+)
 ---
 
 # dataform-sqlx-lint
@@ -22,6 +24,11 @@ dataform-sqlx-lint definitions/path/to/file.sqlx [...]
 Run from the repository root so `${ref()}` targets resolve (the E010 rule
 follows `select *` through refs via `--definitions-root`, default
 `./definitions`). Exit 0 = clean or warnings only; exit 1 = errors.
+
+If the command is not found, look for it in the project's virtualenv
+(`.venv/bin/dataform-sqlx-lint`) before installing it there. Don't skip the
+check because the tool is missing: the findings are what the project's
+pre-commit hook would block on anyway.
 
 Configuration lives in `.sqlx-lint.toml` at the repo root (or
 `[tool.sqlx-lint]` in pyproject.toml) — read it first if present: it declares
