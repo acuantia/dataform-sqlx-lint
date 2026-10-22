@@ -105,12 +105,64 @@ teach AI coding agents (Claude Code, Antigravity, Codex, or any tool that
 supports the open skills format) to run this linter on every `.sqlx` file
 they create or modify.
 
-The skill is the folder `skills/dataform-sqlx-lint/` in this repo. Copy that
-one folder, which holds `SKILL.md`, into your agent's skills directory. Don't
-copy the whole repo or the parent `skills/` folder. The file should end up at
-`<skills directory>/dataform-sqlx-lint/SKILL.md`.
+The skill runs the `dataform-sqlx-lint` command, so install the linter too:
+`pip install dataform-sqlx-lint`, into the virtualenv your Dataform repo uses.
 
-Where the skills directory is:
+### Claude Code
+
+Run one of these from your Dataform repository. They use the
+[skills CLI](https://skills.sh), which needs Node.js.
+
+**For this project, shared with your team:**
+
+```bash
+npx skills add acuantia/dataform-sqlx-lint --skill dataform-sqlx-lint -a claude-code
+```
+
+This writes `.claude/skills/dataform-sqlx-lint/SKILL.md`, plus a
+`skills-lock.json` that records where the skill came from. Commit both.
+Everyone who clones the repo gets the skill, and so do Claude Code sessions
+on the web, which can't see the skills in your home directory.
+
+**For you, in every project:**
+
+```bash
+npx skills add acuantia/dataform-sqlx-lint --skill dataform-sqlx-lint -a claude-code -g
+```
+
+This writes `~/.claude/skills/dataform-sqlx-lint/SKILL.md`.
+
+**Without Node.js**, copy the skill folder yourself. Copy only
+`skills/dataform-sqlx-lint/`, not the whole repo or its parent `skills/`
+folder:
+
+```bash
+git clone --depth 1 https://github.com/acuantia/dataform-sqlx-lint /tmp/dsl
+mkdir -p .claude/skills    # or ~/.claude/skills for every project
+cp -r /tmp/dsl/skills/dataform-sqlx-lint .claude/skills/
+```
+
+**Check that it loaded.** Claude Code picks up new skills without a restart.
+One exception: if `.claude/skills/` didn't exist when your session started,
+run `/reload-skills` once. Then:
+
+1. Run `/skills`. `dataform-sqlx-lint` should be in the list.
+2. Ask *"lint definitions/my_table.sqlx for Dataform conventions"*. Claude
+   should run `dataform-sqlx-lint` and report findings by rule code. From
+   then on it lints every `.sqlx` file it creates or edits, without being
+   asked.
+
+You can also run the skill yourself by typing `/dataform-sqlx-lint`.
+
+**Updating.** `npx skills update dataform-sqlx-lint` pulls the latest version
+of an install made with the skills CLI. For a copied folder, copy it again.
+
+### Other agents
+
+`npx skills add acuantia/dataform-sqlx-lint` without `-a` installs into every
+agent it detects on your machine. To copy the folder by hand instead, put
+`dataform-sqlx-lint/` in your agent's skills directory, so the file ends up at
+`<skills directory>/dataform-sqlx-lint/SKILL.md`:
 
 | Agent | This project only (commit it to share with your team) | Every project on your machine |
 |---|---|---|
@@ -120,20 +172,6 @@ Where the skills directory is:
 
 Project paths are relative to the repository root. If your agent isn't
 listed, see its documentation on skills.
-
-For example, to install it for Claude Code in the current project:
-
-```bash
-git clone --depth 1 https://github.com/acuantia/dataform-sqlx-lint /tmp/dsl
-mkdir -p .claude/skills
-cp -r /tmp/dsl/skills/dataform-sqlx-lint .claude/skills/
-pip install dataform-sqlx-lint   # the skill runs this CLI, so install it too
-```
-
-Restart the agent or start a new session so it finds the skill. To check that
-it works, ask the agent to *"lint definitions/my_table.sqlx for Dataform
-conventions"*. It should run `dataform-sqlx-lint` and report findings by rule
-code.
 
 You can also let the agent install the skill itself. Paste one of the prompts
 in

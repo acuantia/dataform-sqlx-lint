@@ -10,18 +10,23 @@ to ask your agent to do it — copy one of the prompts below.
 Project-level (the skill applies to one repository, shared with your team via
 version control):
 
-> Install the dataform-sqlx-lint agent skill into this project: download
+> Install the dataform-sqlx-lint agent skill into this project. Run
+> `npx skills add acuantia/dataform-sqlx-lint --skill dataform-sqlx-lint -a claude-code -y`
+> from the repository root. If Node.js isn't available, download
 > https://github.com/acuantia/dataform-sqlx-lint/tree/main/skills/dataform-sqlx-lint
-> (just that folder) into .claude/skills/dataform-sqlx-lint/, then confirm the
-> skill is listed. Also pip install dataform-sqlx-lint into this repo's
-> virtualenv so the tool the skill runs is available.
+> (just that folder) into .claude/skills/dataform-sqlx-lint/ instead. Also
+> pip install dataform-sqlx-lint into this repo's virtualenv so the tool the
+> skill runs is available. Then run /reload-skills if .claude/skills/ is new,
+> and confirm dataform-sqlx-lint shows up in /skills.
 
 Personal (available in every project on your machine):
 
-> Install the dataform-sqlx-lint agent skill for me personally: download
+> Install the dataform-sqlx-lint agent skill for me personally. Run
+> `npx skills add acuantia/dataform-sqlx-lint --skill dataform-sqlx-lint -a claude-code -g -y`.
+> If Node.js isn't available, download
 > https://github.com/acuantia/dataform-sqlx-lint/tree/main/skills/dataform-sqlx-lint
-> (just that folder) into ~/.claude/skills/dataform-sqlx-lint/ and confirm it
-> loads.
+> (just that folder) into ~/.claude/skills/dataform-sqlx-lint/ instead. Then
+> confirm dataform-sqlx-lint shows up in /skills.
 
 ## Antigravity
 
