@@ -6,6 +6,9 @@
 #
 # Release: bump `version` in pyproject.toml, commit, then
 #   git tag vX.Y.Z && git push origin main --tags
+# The tag must be on a commit that contains this file, or nothing runs.
+# After PyPI accepts the upload, the github-release job creates the GitHub
+# release with the wheel and sdist attached.
 name: Publish to PyPI
 
 on:
@@ -58,3 +61,26 @@ jobs:
           name: dist
           path: dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
+
+  # Only after PyPI accepted the upload, so a GitHub release never points at a
+  # version pip can't install. Notes are generated from the commits since the
+  # previous tag; edit them on GitHub afterwards if they need a summary.
+  github-release:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # create the release and upload the dist files
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes
